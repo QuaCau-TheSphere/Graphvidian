@@ -1,112 +1,94 @@
-import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-
-interface MyPluginSettings {
-	mySetting: string;
-}
-
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
-}
-
+import { Plugin } from 'obsidian';
+const fs = require('fs');
 export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
-
 	async onload() {
-		console.log('loading plugin');
-
-		await this.loadSettings();
-
-		this.addRibbonIcon('dice', 'Sample Plugin', () => {
-			new Notice('This is a notice!');
-		});
-
-		this.addStatusBarItem().setText('Status Bar Text');
-
-		this.addCommand({
-			id: 'open-sample-modal',
-			name: 'Open Sample Modal',
-			// callback: () => {
-			// 	console.log('Simple Callback');
-			// },
-			checkCallback: (checking: boolean) => {
-				let leaf = this.app.workspace.activeLeaf;
-				if (leaf) {
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
-					return true;
-				}
-				return false;
-			}
-		});
-
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		this.registerCodeMirror((cm: CodeMirror.Editor) => {
-			console.log('codemirror', cm);
-		});
-
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
-
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		//Reading Breadcrumbs database
+		console.clear()
+		var gvstyle = {
+			Giaiphap: {
+				node: "shape=plaintext style=filled, rounded fontname=\"Lato\"  margin=0.2",
+				edge: "" 
+			},
+			Dichung: {
+				node: "shape=plaintext style=filled, rounded fontname=\"Lato\"  margin=0.2",
+				edge: "" 
+			},
+			Ytuongtothon: {
+				node: "shape=plaintext style=filled, rounded fontname=\"Lato\"  margin=0.2",
+				edge: "" 
+			},
+			Yeutohotro: {
+				node: "shape=plaintext style=filled, rounded fontname=\"Lato\"  margin=0.2",
+				edge: "" 
+			},
+			Thamkhao: {
+				node: "shape=plaintext style=filled, rounded fontname=\"Lato\"  margin=0.2",
+				edge: "" 
+			},
+		}
+		const typeKeys = Object.keys(gvstyle)
+		var edgesByID = this.app.plugins.plugins.breadcrumbs.mainG.toJSON().edges
+		
+		//Restructuring the Breadcrumbs database: from sorting by edge ID to sorting by edge type
+		var edgesByType = [] 
+		typeKeys.forEach(edgetype => {
+			var tmp1 = {
+				type: edgetype,
+				edges: [],
+			} 	
+			edgesByID.forEach(edge => {
+				if (edge.attributes.field == edgetype) {
+					var tmp2 = {
+						source: edge.source,
+						dir: edge.attributes.dir,
+						target: edge.target,
+						id: edge.key,
+					} 
+					tmp1.edges.push(tmp2) 
+				} 
+			} );
+			edgesByType.push(tmp1) 
+		})
+		//console.log(edgesByType)
+		
+		//Start making dot file
+		const wrap = (s) => s.replace(/(?![^\n]{1,32}$)([^\n]{1,32})\s/g, '$1\n');
+		var dotoutput = "digraph G {\n" 
+		typeKeys.forEach(edgetype => {
+			dotoutput += `\n//NODES AND EDGES FOR ${edgetype}\n\n` ;
+			
+			const edgeList = edgesByType.filter(item => item.type == edgetype)[0].edges
+			//Print all target nodes of all edges with that type
+			dotoutput += `node [ ${gvstyle[edgetype].node} ]\n`
+			edgeList.forEach(edge => {
+				var nodelabel = wrap(edge.target)
+				dotoutput += `"${edge.target}" [ label = "${nodelabel}" ] \n`
+			} 
+			) 
+			
+			//Print all edges with that type
+			dotoutput += `\nedge [ ${gvstyle[edgetype].edge} ]\n`
+			edgeList.forEach (edge => dotoutput += `"${edge.source}" -> "${edge.target}"\n`
+			);
+		})
+		dotoutput += `\n}`
+		console.log(dotoutput)
+		// console.log('captures/' + getFileName())
+		// var configPath = this.app.vault.configDir + "/plugins/dotmaker/data.json";
+		// this.app.vault.getAbstractFileByPath(configPath) 
+		// var jsonContent = JSON.stringify(json); 
+		// console.log(jsonContent)
+		// this.app.vault.modify("output2.json", dotoutput);
+		// fs.writeFile("output.json", jsonContent, 'utf8', function (err) {
+		// 	if (err) {
+		// 		console.log("An error occured while writing JSON Object to File.");
+		// 		return console.log(err);
+		// 	}
+		// 	console.log("JSON file has been saved.");
+		// });
+		console.log('done')
 	}
-
 	onunload() {
-		console.log('unloading plugin');
-	}
-
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
-
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		let {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
-
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		let {containerEl} = this;
-
-		containerEl.empty();
-
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
+		console.log('unloading plugin')
 	}
 }
