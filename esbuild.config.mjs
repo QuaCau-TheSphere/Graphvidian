@@ -49,5 +49,5 @@ esbuild.build({
 	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
 	// outfile: 'main.js',
-	outdir: 'D:\\Quả Cầu\\B Nội dung\\Knowledge graphs\\Cây vấn đề\\.obsidian\\plugins\\dotmaker',
+	outdir: 'D:\\Quả Cầu\\B Nội dung\\Knowledge graphs\\test\\.obsidian\\plugins\\dotmaker',
 }).catch(() => process.exit(1));
