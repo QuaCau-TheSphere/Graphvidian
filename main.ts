@@ -9,18 +9,30 @@ alllowercase: iteration item of an array.forEach()
 | Node              | Source/target node | Start/end node     |
 */
 import { Plugin } from 'obsidian';
-var path = require("path");
+// const path = require("path");
+const { exec } = require('child_process');
 
 var nodeData = {} 
 var edgeData = {}
+const graphDot = {}    
 
 const bcNodeList = app.plugins.plugins.breadcrumbs.mainG.toJSON().nodes //The object structure in the Breadcrumbs node list is
 const bcEdgeList = app.plugins.plugins.breadcrumbs.mainG.toJSON().edges //different to the object structure in the edge list
 function debug() {
 	console.log("nodeData", nodeData)
 	console.log("edgeData", edgeData)
+	console.log("graphDot", graphDot)
+	console.log("process.cwd()", process.cwd())
 } 
-
+const workingDirectory = app.vault.adapter.getBasePath() + "\\" + app.vault.configDir + "\\plugins\\dotmaker\\graphs\\" 
+console.log('Starting directory: ' + process.cwd());
+try {
+	process.chdir(workingDirectory);
+	console.log('New directory: ' + process.cwd());
+}
+catch (err) {
+	console.log('chdir: ' + err);
+}
 export default class MyPlugin extends Plugin {
 	async onload() {
 		
@@ -287,30 +299,31 @@ edgeData["No Declared"] = edgeTypeNoDeclare
 
 /* Part 3: Making dot file */
 
+
 function addNodesForEachGraph(graph,nodetype,node): void {
 	const neighborNode = nodeData[graph].neighborNode
 	
 	if (graph == "masterGraph") {
-		graphDot.masterGraph += `"${node.name}" [ label = "${node.label}" ] \n`
+		graphDot.masterGraph.nodeSection += `"${node.name}" [ label = "${node.label}" ] \n`
 	} 
 	if (graph !== "masterGraph" && nodetype == graph) {
-		graphDot[graph] += `"${node.name}" [ label = "${node.label}" ] \n`
+		graphDot[graph].nodeSection += `"${node.name}" [ label = "${node.label}" ] \n`
 	} 
 	if (graph !== "masterGraph" && nodetype !== graph && (neighborNode.sourceOf.includes(node.name) || neighborNode.targetOf.includes(node.name))) {
-		graphDot[graph] += `"${node.name}" [ label = "${node.label}" ] \n`
+		graphDot[graph].nodeSection += `"${node.name}" [ label = "${node.label}" ] \n`
 	} 
 }
 
 function addPairingEdgesForEachGraph(graph,edgetype,edge,k,style) {
 	if (graph == "masterGraph") {
-		graphDot.masterGraph += `
+		graphDot.masterGraph.edgeSection += `
 subgraph cluster_${edgetype}_${k}{
 rank=same
 edge [ ${style} ]
 "${edge.start}" -> "${edge.end}"\n}`
 	} 
 	if (graph != "masterGraph" && edgetype == graph) {
-		graphDot[graph] += `
+		graphDot[graph].edgeSection += `
 		subgraph cluster_${edgetype}_${k}{
 			rank=same
 			edge [ ${style} ]
@@ -320,49 +333,54 @@ edge [ ${style} ]
 	}
 function addNonPairingEdgesForEachGraph(graph,edgetype,edge) {
 	if (graph == "masterGraph") {
-		graphDot.masterGraph += `"${edge.start}" -> "${edge.end}"\n`
+		graphDot.masterGraph.edgeSection += `"${edge.start}" -> "${edge.end}"\n`
 	}
-	function checkIfNode(edgetype, edge, graph) {
+	function checkNodeRelationToCurrentGraph(edgetype, edge, graph) {
 		var a = nodeData[graph].nodes.filter(node => node.name==edge.start || node.name==edge.end)
 		if (a.length !=0 ) {
-			console.log(graph,edgetype, edge, a)
+			// console.log(graph,edgetype, edge, a)
 			return true
 		} 
 	}
 	
-	if (graph !== "masterGraph" && checkIfNode(edgetype, edge, graph)) {
-		graphDot[graph] += `"${edge.start}" -> "${edge.end}"\n`
+	if (graph !== "masterGraph" && checkNodeRelationToCurrentGraph(edgetype, edge, graph)) {
+		graphDot[graph].edgeSection += `"${edge.start}" -> "${edge.end}"\n`
 	}
 }
 
-const graphDot = {}    
 for (const graph in nodeTypeListDeclaration) {
+	graphDot[graph] = {
+		nodeSection: "",
+		edgeSection: "",
+		final: "" 
+	}
+
 	/* 3.1: Print all nodes by type */
-	graphDot[graph] = `digraph ${graph}{\n${nodeData.masterGraph.settings.graphHeader}\n//NODES\n//====================\n\n` ;
+	graphDot[graph].nodeSection = `//NODES\n//====================\n\n` 
 	nodeTypeList.forEach(nodetype => {
 		const style = nodeData[nodetype].settings.style
 		const cluster = nodeData[nodetype].settings.cluster
 		const subgraphSetting = nodeData[nodetype].settings.subgraphSetting
 		
-		graphDot[graph] +=	 `\nnode [ ${nodeData.masterGraph.settings.style} ] //Reset style\n\n` 
-		graphDot[graph] += `//All ${nodetype} nodes\n` ;
+		graphDot[graph].nodeSection +=	 `\nnode [ ${nodeData.masterGraph.settings.style} ] //Reset style\n\n` 
+		graphDot[graph].nodeSection += `//All ${nodetype} nodes\n` ;
 		if(cluster == true) {
-			graphDot[graph] += `subgraph cluster_${nodetype}{\n${subgraphSetting}\n`
+			graphDot[graph].nodeSection += `subgraph cluster_${nodetype}{\n${subgraphSetting}\n`
 		} 
 		if (style !== undefined) {
-			graphDot[graph] += `\nnode [ ${style} ]\n`
+			graphDot[graph].nodeSection += `\nnode [ ${style} ]\n`
 		} 
 		
 		nodeData[nodetype].nodes.forEach(node => addNodesForEachGraph(graph,nodetype,node))
 		
 		if(cluster == true) {
-			graphDot[graph] += `}\n`
+			graphDot[graph].nodeSection += `}\n`
 		} 
 	})
 	
 	
 	/* 3.2: Print all edges by type */
-	graphDot[graph] += `\n\n//EDGES\n//====================\n` ;
+	graphDot[graph].edgeSection = `\n\n//EDGES\n//====================\n` ;
 	var k=0
 	
 	edgeTypeList.forEach(edgetype => {
@@ -372,9 +390,9 @@ for (const graph in nodeTypeListDeclaration) {
 		const pairing = edgeData[edgetype].settings.pairing
 		
 		if (edgeData.masterGraph.settings.style !== undefined) {
-			graphDot[graph] += `\nedge [ ${edgeData.masterGraph.settings.style} ] //Reset style\n`
+			graphDot[graph].edgeSection += `\nedge [ ${edgeData.masterGraph.settings.style} ] //Reset style\n`
 		} 
-		graphDot[graph] += `\n//All ${edgetype} edges\n`
+		graphDot[graph].edgeSection += `\n//All ${edgetype} edges\n`
 		
 		if (pairing == true) {
 			edgeData[edgetype].edges.forEach (edge => { 
@@ -383,41 +401,55 @@ for (const graph in nodeTypeListDeclaration) {
 			});
 		} else { 
 			if (cluster == true && sameRank == true) {
-				graphDot[graph] += `subgraph cluster_${edgetype}{\nrank=same\n`
+				graphDot[graph].edgeSection += `subgraph cluster_${edgetype}{\nrank=same\n`
 			}
 			if (cluster == true && sameRank !== true) {
-				graphDot[graph] += `subgraph cluster_${edgetype}{\n`
+				graphDot[graph].edgeSection += `subgraph cluster_${edgetype}{\n`
 			} 
 			if (cluster !== true && sameRank == true) {
-				graphDot[graph] += `subgraph {\nrank=same\n`
+				graphDot[graph].edgeSection += `subgraph {\nrank=same\n`
 			}
 			if (style !== undefined) {
-				graphDot[graph] += `\nedge [ ${style} ]\n`
+				graphDot[graph].edgeSection += `\nedge [ ${style} ]\n`
 			} 
 			edgeData[edgetype].edges.forEach (edge => { 
 				addNonPairingEdgesForEachGraph(graph,edgetype,edge)	
 			})
 			
 			if (cluster == true || sameRank == true) {
-				graphDot[graph] += `}\n`
+				graphDot[graph].edgeSection += `}\n`
 			} 
 		} 
 	})
-	graphDot[graph] += `\n}`
-}
+	graphDot[graph].edgeSection += `\n}`
 
-/* Part 4: Export to file */
+	/* 3.3: Creating final output */
+	graphDot[graph].final = `digraph ${graph}{\n${nodeData.masterGraph.settings.graphHeader}\n` ;
+	graphDot[graph].final += graphDot[graph].nodeSection + graphDot[graph].edgeSection;
 
-for (const graph in nodeTypeListDeclaration) {
-	var configPath = this.app.vault.configDir + "/plugins/dotmaker/graphs/" + graph + ".dot";
-	app.vault.adapter.write(configPath,graphDot[graph])
-	console.log(graphDot[graph] )
-} 
-console.log('done')
-debug()
-console.log(". = %s", path.resolve("."));
-console.log("__dirname = %s", path.resolve(__dirname));
+	// console.log(graphDot[graph].nodeSection)
+	// console.log(graphDot[graph].edgeSection)
+	// console.log(graphDot[graph].final)
 	
+/* Part 4: Export to file */	
+	var filePath = app.vault.configDir + "\\plugins\\dotmaker\\graphs\\"  + graph + ".dot";
+	var command = `unflatten -l 3 ${graph}.dot | dot -Tpng -o ${graph}.png`
+	app.vault.adapter.write(filePath,graphDot[graph].final)
+	// console.log(graphDot[graph] )
+	exec(command, (error, stdout, stderr) => {
+		console.log("filePath:", filePath)
+		console.log(command)
+		console.log("stdout:", stdout);
+		console.log("stderr:", stderr);
+		if (error !== null) {
+			console.log(`exec error: ${error}`);
+		}
+	}); 
+}
+debug()
+console.log('done')
+
+
 };
 onunload() {
 	console.log('unloading plugin')
