@@ -18,7 +18,7 @@ A cluster of the master graph:
 - Generate a master graph and individual graphs of each cluster (ideal for large graph) 
 - Generate with `unflatten` (useful to [distribute nodes on the same rank of a wide graph to different lines](https://stackoverflow.com/a/11136488/3416774))
 
-For the reason I make this plugin, read [this post on the Obsidian forum](https://forum.obsidian.md/t/graphviz-and-hierarchical-graph-layout-a-review-and-plugin-proposal/31596?u=ooker). 
+For a detailed review of other similar plugins and why they don't cover my needs, as well as the roadmap for the future, read [this post on the Obsidian forum](https://forum.obsidian.md/t/graphviz-and-hierarchical-graph-layout-a-review-and-plugin-proposal/31596?u=ooker). 
 
 # How to use
 Since I make for myself to serve my need, it doesn't have a nice UI yet. To use it to serve your need, you will need to get your hand wet 😎
