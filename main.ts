@@ -9,7 +9,6 @@ alllowercase: iteration item of an array.forEach()
 | Node              | Source/target node | Start/end node     |
 */
 import { Plugin } from 'obsidian';
-// const path = require("path");
 const { exec } = require('child_process');
 
 var nodeData = {} 
@@ -85,7 +84,6 @@ const nodeTypeListDeclaration = { //Styles used in final graph for each node typ
 		method: "Index",
 		cluster: true,
 		subgraphSetting: "label = \"i Megan dám nói rằng \\\"tôi sẽ không để nỗi sợ chi phối mình\\\"\"",
-		separateGraph: true
 	},
 	branch_j: {
 		method: "Index",
@@ -138,31 +136,25 @@ const nodeTypeListDeclaration = { //Styles used in final graph for each node typ
 		cluster: true,
 		subgraphSetting: "label = \"s Kết hợp được với các dự án khác\"",
 	},
-} 
+}
 const edgeTypeListDeclaration = { //Styles used in final graph for each edge type
 	masterGraph: {
 		style: "penwidth=1" 
 	},
 	Giaiphap: {
-		method: "Breadcrumbs",
 	},
 	Dichung: {
-		method: "Breadcrumbs",
 		pairing: true,
 		style: "minlen=0 style=bold penwidth=5 dir=both arrowtype=odiamond" 
 	},
 	Ytuongtothon: {
-		method: "Breadcrumbs",
 	},
 	Yeutohotro: {
-		method: "Breadcrumbs",
 	},
 	Thamkhao: {
-		method: "Breadcrumbs",
 		style: "style=dashed " 
 	},
 	Hanhdong: {
-		method: "Breadcrumbs",
 	} 
 }
 const nodeTypeList = Object.keys(nodeTypeListDeclaration)
