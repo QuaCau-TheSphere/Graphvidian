@@ -1,5 +1,5 @@
-**What it is:** an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault
-**How it does:** convert the database from Breacrumbs to .dot format which Graphviz can understand
+**What it is:** an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault  
+**How it does:** convert the database from Breacrumbs to .dot format which Graphviz can understand  
 **Why it is made:** to combine the power of Obsidian and Graphviz, which isn't addressed by other plugins at the time of it is made
 
 For a detailed review of why other similar plugins don't cover my needs, as well as the roadmap for the future, read [this post on the Obsidian forum](https://forum.obsidian.md/t/graphviz-and-hierarchical-graph-layout-a-review-and-plugin-proposal/31596?u=ooker). 
