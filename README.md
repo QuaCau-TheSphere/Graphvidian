@@ -128,5 +128,5 @@ To change the Graphviz command (default is `unflatten -l 3 graphname.dot | dot -
 To investigate how Breadcrumbs organize the data, visit the console log and type in `app.plugins.plugins.breadcrumbs.mainG.toJSON()`.
 
 # About me
-[lyminhnhat.com](https://lyminhnhat.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (English) 
+[lyminhnhat.com](https://lyminhnhat.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (English)  
 [quảcầu.com](https://xn--qucu-hr5aza.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (Vietnamese) 
