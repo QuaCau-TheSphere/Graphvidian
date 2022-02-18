@@ -42,11 +42,12 @@ const nodeTypeListDeclaration = { //Styles used in final graph for each node typ
 	masterGraph: { 
 		style: "shape=plaintext style=\"filled, rounded\" fontname=\"Lato\" margin=0.2 fillcolor=\"#c6cac3\"",
 		graphHeader: 
-		`splines=ortho;
-		// overlap=false;
+		`//splines=ortho;
+		overlap=false
 		style=rounded
-		ranksep="0.4";
+		// ranksep="0.4";
 		label="Thay đổi niềm tin người có niềm tin tiêu cực";
+		sep=10
 		fontsize = 30
 		labelloc="t";
 		fontname="Lato";`,
@@ -424,23 +425,30 @@ for (const graph in nodeTypeListDeclaration) {
 	// console.log(graphDot[graph].final)
 	
 /* Part 4: Export to file */	
+	const commandList = [
+		`unflatten -l 3 ${graph}.dot -o unflatten_${graph}.dot`,
+		`dot -Tpng unflatten_${graph}.dot -o dot_${graph}.png`,
+		// `neato -Tpng ${graph}.dot -o neato_${graph}.png`,
+		// `twopi -Tpng ${graph}.dot -o twopi_${graph}.png`,
+		// `circo -Tpng ${graph}.dot -o circo_${graph}.png`,
+		// `sfdp -Tpng ${graph}.dot -o sfdp_${graph}.png`,
+	] 	
+
 	var filePath = app.vault.configDir + "\\plugins\\dotmaker\\graphs\\"  + graph + ".dot";
-	var command = `unflatten -l 3 ${graph}.dot | dot -Tpng -o ${graph}.png`
 	app.vault.adapter.write(filePath,graphDot[graph].final)
 	// console.log(graphDot[graph] )
-	exec(command, (error, stdout, stderr) => {
+	commandList.forEach(command => exec(command, (error, stdout, stderr) => {
 		console.log("filePath:", filePath)
-		console.log(command)
+		console.log(graph, command)
 		console.log("stdout:", stdout);
 		console.log("stderr:", stderr);
 		if (error !== null) {
 			console.log(`exec error: ${error}`);
 		}
-	}); 
+	}))
 }
 debug()
 console.log('done')
-
 
 };
 onunload() {

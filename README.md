@@ -1,5 +1,7 @@
-**What it is:** an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault  
-**How it does:** convert the database from Breacrumbs to .dot format which Graphviz can understand  
+**What it is:** an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault
+
+**How it does:** convert the database from Breacrumbs to .dot format which Graphviz can understand
+
 **Why it is made:** to combine the power of Obsidian and Graphviz, which isn't addressed by other plugins at the time of it is made
 
 For a detailed review of why other similar plugins don't cover my needs, as well as the roadmap for the future, read [this post on the Obsidian forum](https://forum.obsidian.md/t/graphviz-and-hierarchical-graph-layout-a-review-and-plugin-proposal/31596?u=ooker). 
@@ -20,7 +22,7 @@ A cluster of the master graph:
 - Support cluster for each subgraph
 - Support pairing nodes (nodes that should be a cluster by themselves)
 - Generate a master graph and individual graphs of each cluster (ideal for large graph) 
-- Generate with `unflatten` (useful to [distribute nodes on the same rank of a wide graph to different lines](https://stackoverflow.com/a/11136488/3416774))
+- Support running multiple commands (useful if you want to generate different layouts to know which one looks nicest, use unflatten to [distribute nodes on the same rank of a wide graph to different lines](https://stackoverflow.com/a/11136488/3416774), or overlaying legend or watermark)
 
 # How to use
 Since I make for myself to serve my need, it doesn't have a nice UI yet. To use it to serve your need, you will need to get your hand wet 😎
