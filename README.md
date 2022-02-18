@@ -1,4 +1,8 @@
-This is an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault. Its job is to convert the database from Obsidian Breacrumbs to .dot format which Graphviz can understand
+**What it is:** an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault
+**How it does:** convert the database from Breacrumbs to .dot format which Graphviz can understand
+**Why it is made:** to combine the power of Obsidian and Graphviz, which isn't addressed by other plugins at the time of it is made
+
+For a detailed review of why other similar plugins don't cover my needs, as well as the roadmap for the future, read [this post on the Obsidian forum](https://forum.obsidian.md/t/graphviz-and-hierarchical-graph-layout-a-review-and-plugin-proposal/31596?u=ooker). 
 
 # Demo
 Master graph:
@@ -17,8 +21,6 @@ A cluster of the master graph:
 - Support pairing nodes (nodes that should be a cluster by themselves)
 - Generate a master graph and individual graphs of each cluster (ideal for large graph) 
 - Generate with `unflatten` (useful to [distribute nodes on the same rank of a wide graph to different lines](https://stackoverflow.com/a/11136488/3416774))
-
-For a detailed review of other similar plugins and why they don't cover my needs, as well as the roadmap for the future, read [this post on the Obsidian forum](https://forum.obsidian.md/t/graphviz-and-hierarchical-graph-layout-a-review-and-plugin-proposal/31596?u=ooker). 
 
 # How to use
 Since I make for myself to serve my need, it doesn't have a nice UI yet. To use it to serve your need, you will need to get your hand wet 😎
@@ -107,11 +109,11 @@ const nodeTypeListDeclaration = { //Styles used in final graph for each node typ
 ```
 While the edge types are totally depended on the types you declared in Breadcrumbs, you can have more options with nodes. Two current available methods are: `End of edge type`, and `Index`. If it's `End of edge type`, then the name of the node type should be exactly the same with the name of the edge type. (In the example it's `edgeType1`). If it's `Index`, then these two conditions must be met:
 - The name of the type should have the index at the end, after an underscore. E.g. `blabla_1b`, `bloblo_i`
-- The index of the node should be at the beginning of its title, separate with the name by a space, and splited by dots. E.g. `1b.1 Hello`, `i.j.k Ngồi trong toilet gào thét tên em`
+- The index of the node should be at the beginning of its title, separate with the name by a space, and splited by dots. E.g. `1b.1 Hello internet`, `i.j.k I dream a dream`
 
 If `sameRank` or `cluster` has value true, then the nodes of that type will be contained in a subgraph.
 
-If a node has multiple types, then Graphviz will decide the out put based on the order of the types
+If a node has multiple types, then Graphviz will decide the output based on the order of the types.
 
 ### Other configs
 To change the output folder to a different location (default is in _.obsidian/plguins/dotmaker/graphs_), change the value of `workingDirectory`:
@@ -126,4 +128,5 @@ To change the Graphviz command (default is `unflatten -l 3 graphname.dot | dot -
 To investigate how Breadcrumbs organize the data, visit the console log and type in `app.plugins.plugins.breadcrumbs.mainG.toJSON()`.
 
 # About me
-[Lyminhnhat.com](https://lyminhnhat.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) 
+[lyminhnhat.com](https://lyminhnhat.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (English) 
+[quảcầu.com](https://xn--qucu-hr5aza.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (Vietnamese) 
