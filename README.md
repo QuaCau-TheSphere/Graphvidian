@@ -56,7 +56,7 @@ const edgeTypeListDeclaration = { //Styles used in final graph for each edge typ
 	},
 }
 ```
-It consists these keys: `masterGraph`, `edgeType1`, `edgeType2`, `edgeType3`, `pairingEdgeType`. Except the `masterGraph`, they are the [relationship type](https://breadcrumbs-wiki.onrender.com/docs/Getting%20Started/Hierarchies "Hierarchies | Breadcrumbs") that you have used in Breadcrumbs. Replace them with the names you use.
+It consists these keys: `masterGraph`, `edgeType1`, `edgeType2`, `edgeType3`, `pairingEdgeType`. Except the `masterGraph`, they are the [relationship type](https://breadcrumbs-wiki.onrender.com/docs/Getting%20Started/Hierarchies "Hierarchies | Breadcrumbs") that you have used in Breadcrumbs. Replace them with the names you use.  
 ![](https://i.imgur.com/hL3zsSG.png)
 
 The values of these keys (indicating by the curly brackets after the colons at the ends of the keys) are themselves objects. These objects may or may not have these keys: `style`, `pairing`. The value of the `style` is what you would put into `edge [ ]` in Graphviz. If the value of `pairing` is false or the key is missing, then the edges are printed normally. If the value is true, then in the output each edge of that type will be in a separate cluster with `rank=same`, like this:
@@ -116,17 +116,17 @@ If `sameRank` or `cluster` has value true, then the nodes of that type will be c
 If a node has multiple types, then Graphviz will decide the output based on the order of the types.
 
 ### Other configs
-To change the output folder to a different location (default is in _.obsidian/plguins/dotmaker/graphs_), change the value of `workingDirectory`:
+To change the output folder to a different location (default is in _.obsidian/plguins/dotmaker/graphs_), change the value of `workingDirectory`:  
 ![](https://i.imgur.com/MyrWl9n.png)
 
-To change how indexes are detected, change these lines:
+To change how indexes are detected, change these lines:  
 ![](https://i.imgur.com/wmU5euJ.png)
 
-To change the Graphviz command (default is `unflatten -l 3 graphname.dot | dot -Tpng -o graphname.png`), change the value of `command`:
+To change the Graphviz command (default is `unflatten -l 3 graphname.dot | dot -Tpng -o graphname.png`), change the value of `command`:  
 ![](https://i.imgur.com/9TXyi73.png)
 
 To investigate how Breadcrumbs organize the data, visit the console log and type in `app.plugins.plugins.breadcrumbs.mainG.toJSON()`.
 
 # About me
-[lyminhnhat.com](https://lyminhnhat.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (English) 
+[lyminhnhat.com](https://lyminhnhat.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (English)  
 [quảcầu.com](https://xn--qucu-hr5aza.com?utm_source=GitHub+%C2%BB+Obsidian+Hierarchical+Graph+%C2%BB+Readme&utm_medium=Homepage&utm_campaign=Giai+%C4%91o%E1%BA%A1n+1) (Vietnamese) 
