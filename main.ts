@@ -449,7 +449,7 @@ for (const graph in nodeTypeListDeclaration) {
 }
 debug()
 console.log('done')
-
+ 
 };
 onunload() {
 	console.log('unloading plugin')

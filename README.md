@@ -1,6 +1,6 @@
-**What it is:** an Obsidian plugin to generate hierarchial graphs, with the nodes are from your Obsidian vault
+**What it is:** an Obsidian plugin to generate hierarchical graphs, with the nodes are from your Obsidian vault
 
-**How it does:** convert the database from Breacrumbs to .dot format which Graphviz can understand
+**How it does:** convert the database from Breadcrumbs to .dot format which Graphviz can understand
 
 **Why it is made:** to combine the power of Obsidian and Graphviz, which isn't addressed by other plugins at the time of it is made
 
@@ -14,7 +14,7 @@ A cluster of the master graph:
 ![](https://i.imgur.com/JYC1OBj.png)
 
 # Features
-- Auto-wrap node lables to prevent overflow texts
+- Auto-wrap node labels to prevent text overflowing
 - Detect different node type whether by it being the end node of a particular edge type, or by the index at the beginning of its title
 - Support default node and edge styles 
 - Support subgraphs, and styling for each subgraph
@@ -22,15 +22,15 @@ A cluster of the master graph:
 - Support cluster for each subgraph
 - Support pairing nodes (nodes that should be a cluster by themselves)
 - Generate a master graph and individual graphs of each cluster (ideal for large graph) 
-- Support running multiple commands (useful if you want to generate different layouts to know which one looks nicest, use unflatten to [distribute nodes on the same rank of a wide graph to different lines](https://stackoverflow.com/a/11136488/3416774), or overlaying legend or watermark)
+- Support running multiple commands (useful if you want to generate different layouts to know which one looks nicest, use unflatten to [distribute nodes on the same rank of a wide graph to different lines](https://stackoverflow.com/a/11136488/3416774), or overlay legend or watermark)
 
 # How to use
-Since I make for myself to serve my need, it doesn't have a nice UI yet. To use it to serve your need, you will need to get your hand wet 😎
+Since I make for myself to serve my need, it doesn't have a nice UI yet. To use it for your need, you will need to get your hand wet 😎
 
 Things you wil need:
-- Install and be familiar with [Obsidian](https://obsidian.md/ "Obsidian"), [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs), and [Graphviz](https://graphviz.org/ "Graphviz")
+- Install and be familiar with [Obsidian](https://obsidian.md/ "Obsidian"), [Breadcrumbs](https://github.com/SkepticMystic/breadcrumbs), and [Graphviz](https://graphviz.org/ "Graphviz"). You need to have at least one hierarchy in Breadcrumbs
 - Know how to manually install a plugin by following [the first 5 minutes of this video](https://www.youtube.com/watch?v=9lA-jaMNS0k9)
-- (Optional) Try to use VSCode to work on main.ts file, use `npm run dev` to watch for change in the main.ts file and automatically update the main.js file, and [Hot-Reload](https://github.com/pjeby/hot-reload "pjeby/hot-reload: Automatically reload Obsidian plugins in development when their files are changed") to automatically reload the plugin when the main.js file is changed. (You can directly change the main.js file though, as how I used to do when I was like you: inexperienced and be intimidated with what I just say to you 🤡)
+- (Optional) Use VSCode to work on main.ts file, use `npm run dev` to watch for change in the main.ts file and automatically update the main.js file, and [Hot-Reload](https://github.com/pjeby/hot-reload "pjeby/hot-reload: Automatically reload Obsidian plugins in development when their files are changed") to automatically reload the plugin when the main.js file is changed. (You can directly change the main.js file though, as how I used to do when I was like you: inexperienced and be intimidated with what I just say to you 🤡)
 
 If you also want to have a quick start to learn JavaScript, you can start with this 5 minute video: [JavaScript objects explained the visual way](https://www.youtube.com/watch?v=BRSg22VacUA "JavaScript objects explained the visual way - YouTube")
 
@@ -125,7 +125,7 @@ To change how indexes are detected, change these lines:
 ![](https://i.imgur.com/wmU5euJ.png)
 
 To change the Graphviz command (default is `unflatten -l 3 graphname.dot | dot -Tpng -o graphname.png`), change the value of `command`:  
-![](https://i.imgur.com/9TXyi73.png)
+![](https://i.imgur.com/vTeSdqO.png)
 
 To investigate how Breadcrumbs organize the data, visit the console log and type in `app.plugins.plugins.breadcrumbs.mainG.toJSON()`.
 
